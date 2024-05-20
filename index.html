@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>Inance</title>
+
+  <!-- slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <!-- font awesome style -->
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="css/responsive.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.scss">
+
+</head>
+
+<body>
+  
+  <div class="uppertext">
+    <p class="toppara">HUMANOID ASSISTANT ROBOTIC PLATFORM</p>
+  <h1 class="text">WELCOME HARP</h1>
+  </div>
+  <!-- feature section -->
+  <section class="feature_section">
+    
+
+    <div class="container">
+      <div class="feature_container">
+        <div class="box">
+          <div class="img-box">
+            <a href="contact.html">
+              <img src="images/contactbook.svg" class="img1" alt="" />
+            </div>
+            <h5 class="name">
+              Contact Info
+            </h5>
+            </a>
+        </div>
+        <div class="box">
+          <div class="img-box">
+            <a href="Accessibility.html">
+              <img src="images/accessibility.svg" class="img1" alt="" />
+            </div>
+            <h5 class="name">
+              Direction & Availability
+
+            </h5>
+
+            </a>
+        </div>
+        <div class="box">
+          <div class="img-box">
+            <a href="appointment.html">
+              <img src="images/appointment.svg" class="img1" alt="" />
+            </div>
+            <h5 class="name">
+              Appointments
+            </h5>
+            </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <!-- end feature section -->
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Speech Recognition</title>
+  </head>
+  <body>
+    <div style="width: 193px;
+    height: 212px;
+    padding: 2vh;
+    background-color: aliceblue;
+    margin-right: 5px; z-index: 155; overflow: scroll; ">
+  <h3>output</h3>  
+  <p id="server-output">Model reults will appear here.</p>
+  </div>
+    <div class="paltform" style="width: 193px;
+    height: 212px;
+    padding: 2vh;
+    background-color: aliceblue   ">
+      <h3>Speech Recognition</h3>
+      <p id="output">Transcribed text will appear here...</p>
+  </div>
+  
+      <script>
+          window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+          const recognition = new SpeechRecognition();
+          recognition.lang = 'en-US';
+  
+          recognition.onresult = (event) => {
+              const speechToText = event.results[0][0].transcript;
+              document.getElementById('output').textContent = speechToText;
+  
+              // Send audio data to Flask API endpoint
+              sendDataToFlask(speechToText);
+          };
+  
+          recognition.onend = () => {
+              recognition.start();
+          };
+  
+          recognition.start();
+  
+          // Function to send audio data to Flask API endpoint
+          function speakText() {
+          const textToSpeak = document.getElementById('server-output').textContent;
+          const utterance = new SpeechSynthesisUtterance(textToSpeak);
+          speechSynthesis.speak(utterance)}
+  
+          function sendDataToFlask(audioData) {
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', 'http://127.0.0.1:5000/audio', true);
+              xhr.setRequestHeader('Content-Type', 'application/json');
+  
+              // Handle response from server
+              xhr.onload = function() {
+                  if (xhr.status === 200) {
+                      const response = JSON.parse(xhr.responseText);
+                      const transcribedText = response.transcribed_text;
+                      console.log(response)
+                      document.getElementById('server-output').textContent = response.message;
+                      document.getElementById('output').textContent = transcribedText;
+                      speakText();
+                      
+                  } else {
+                      console.error('Error:', xhr.statusText);
+                  }
+              };
+  
+              xhr.onerror = function() {
+                  console.error('Request failed.');
+              };
+  
+              xhr.send(JSON.stringify({ audio: audioData }));
+          }
+         
+        
+  
+      </script>
+  </body>
+  </html>
+
+ 
+
+
+</body>
+
+</html>
